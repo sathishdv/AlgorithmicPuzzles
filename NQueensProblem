@@ -1,0 +1,82 @@
+//Solve N Queens Problem
+//Place Queens on a Chess board (8 X 8 usually) so that no Queens clash each other either horizontal, vertical or diagonal.
+//Code written in C#
+
+class Program
+    {
+        static int[] output;
+        static void Main(string[] args)
+         {
+            int n = 8;
+            output = new int[n];
+            int[] result = new int[n];
+            string[][] board = new string[n][];
+            SolveNQueens(result, 0, n);
+            PrintBoard(board, output);
+            Console.WriteLine("Completed");
+            Console.ReadLine();
+        }
+
+        /// <summary>
+        /// Solves using integer array by keeping track of assinged index.
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="x"></param>
+        /// <param name="length"></param>
+        static void SolveNQueens(int[]result, int x, int length)
+        {
+          
+            for(int i = 0; i < length; i++)
+            {
+                if (IsSafePosition(result, x, i))
+                {
+                    result[x] = i; //Queen Placement
+                    if(x == length - 1)
+                    {
+                        Array.Copy(result, output, result.Length);
+                       
+                    }
+                    //Recursively call if safe position found. Else it backtracks.
+                    SolveNQueens(result, x + 1, length);
+                }
+              
+            }
+
+          
+        }
+
+        /// <summary>
+        /// Checks if the given position is safe to place a queen.
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="row"></param>
+        /// <param name="col"></param>
+        /// <returns></returns>
+        static bool IsSafePosition(int[] result, int row, int col)
+        {
+            for(int i =0; i < row; i++)
+            {
+                if(result[i] == col || Math.Abs(i - row) == Math.Abs(result[i] - col))
+                    return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Utility function to print the board on screen
+        /// </summary>
+        /// <param name="board"></param>
+        /// <param name="result"></param>
+        static void PrintBoard(string[][] board, int[] result)
+        {
+            for (int i = 0; i < result.Length; i++)
+            {
+                board[i] = new string[result.Length];
+                for (int j = 0; j < result.Length; j++)
+                    board[i][j] = "O";
+                board[i][result[i]] = "X";              
+                Console.WriteLine(string.Join("|", board[i]));
+               
+            }
+        }
+    }
