@@ -1,0 +1,88 @@
+//Simple Trie Data Structure Impementation using C#
+//Simple implementation with Add new word, check if word is valid and get count of word(including partial match)
+//Assuming characters between 'a' and 'z'
+
+public class TrieNode
+{
+    private char Letter;
+    private bool IsWord = false;
+    private int Count = 0;
+    private TrieNode[] Children {get;set;}
+    
+    public TrieNode(char letter)
+    {
+        this.Letter = letter;
+        this.Children = new TrieNode[26];        
+    }
+    
+   /// <summary>
+   /// Add a new word.
+   /// </summary>
+   /// <param name="s"></param>
+    public void Add(string word)
+    {
+        this.Count++;
+        if(string.IsNullOrEmpty(word))
+          return;
+        char letter = word[0];
+        int index = letter - 'a';
+        if(index >= 0)
+        {
+            if(this.Children[index] == null)
+                this.Children[index] = new TrieNode(letter);
+                
+            this.Children[index].Add(word.Substring(1));
+        }
+    }
+    
+    /// <summary>
+    /// Check if given word is valid.
+    /// </summary>
+    /// <param name="word"></param>
+    /// <returns></returns>
+    public bool IsValidWord(string word)
+    {
+        if(string.IsNullOrEmpty(word))
+            return true;
+         
+         char letter = word[0];
+         int index = letter = 'a';
+         if(index >= 0)
+         {
+             if(this.Children[index] != null && this.Children[index].Letter == letter)
+             {
+                this.IsWord = true;
+                return this.Children[index].IsValidWord(word.Substring(1));
+             }
+             else
+             return false;
+         }
+         else
+          return this.IsWord;
+    }
+    
+    /// <summary>
+    /// Gets the count of occurrences of the word.
+    /// </summary>
+    /// <param name="word"></param>
+    /// <returns></returns>
+    public int GetMatchCount(string word)
+    {
+        if(string.IsNullOrEmpty(word))
+            return this.Count;
+            
+        char letter = word[0];
+        int index = letter - 'a';
+        if(index >=0)
+        {
+            if(this.Children[index] == null)
+                return 0;
+            
+            return this.Children[index].GetMatchCount(word.Substring(0));
+        }
+        else
+        {
+            return 0;
+        }
+    }
+}
